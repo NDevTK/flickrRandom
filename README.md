@@ -1,5 +1,5 @@
 # flickerRandom
-# MAY HAVE BUGS/VULNS
+# May have bugs,vulnerabilities
 Gets random image URLs from flicker  
 
 
