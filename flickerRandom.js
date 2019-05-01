@@ -73,14 +73,14 @@ function RandomOrder(pages) {
 }
 
 function event(data) { // Main callback from flickr (returns true if event)
-    pages = data.photos.pages; // Get total pages
+    FlkrrRND.pages = data.photos.pages; // Get total pages
     if (data.photos.page === 1) { // On first page start loop
-        if (state > pages) {
-            state = 0; // If state is invalid reset to 0
+        if (FlkrrRND.state > FlkrrRND.pages) {
+            FlkrrRND.state = 0; // If state is invalid reset to 0
         }
         var order = RandomOrder(pages); // Put requests in an random order
         setInterval(GetImage, update_rate);
-        if (state > 0) {
+        if (FlkrrRND.state > 0) {
             return false // Dont send event
         }
     }
