@@ -21,7 +21,7 @@ function InitFlickerRandom(subject, apikey, license = 10) { // Start Function
     FlkrrRND.store = window.localStorage;
     FlkrrRND.seed = Data("seed", RNDSeed());
     FlkrrRND.state = Data("state", 0);
-    FlkrrRND.SessionRNG = Math.seed(seed);
+    FlkrrRND.SessionRNG = Math.seed(FlkrrRND.seed);
     FlickrImageApi("1", "event");
 }
 
