@@ -73,6 +73,11 @@ function RandomOrder(pages) {
 }
 
 function event(data) { // Main callback from flickr (returns true if event)
+    if(data.stat == "fail" && data.message){
+		var error = "FlickrAPI: "+data.message;
+		alert(error);
+		console.log(error);
+	}
     FlkrrRND.pages = data.photos.pages; // Get total pages
     if (data.photos.page === 1) { // On first page start loop
         if (FlkrrRND.state > FlkrrRND.pages) {
