@@ -1,11 +1,11 @@
 update_rate = 1000; // Get new images every second :D
-
+FlkrrRND = {}
 function Data(name, altdata) { // If local storage does not have the key return with altdata
-    item = subject + "#" + name; // eg "cats#seed"
-    if (data = store.getItem(item)) {
+    var item = FlkrrRND.subject + "#" + name; // eg "cats#seed"
+    if (data = FlkrrRND.store.getItem(item)) {
         return data
     } else {
-        store.setItem(item, altdata);
+        FlkrrRND.store.setItem(item, altdata);
         return altdata
     }
 }
@@ -15,28 +15,28 @@ function RNDSeed() { // Creates seed
 }
 
 function InitFlickerRandom(subject, apikey, license = 10) { // Start Function
-    flkrkey = apikey
-    flkrlicense = license;
-    subject = encodeURI(subject);
-    store = window.localStorage;
-    seed = Data("seed", RNDSeed());
-    state = Data("state", 0);
-    SessionRNG = Math.seed(seed);
+    FlkrrRND.apikey = apikey
+    FlkrrRND.license = license;
+    FlkrrRND.subject = subject = encodeURI(subject);
+    FlkrrRND.store = window.localStorage;
+    FlkrrRND.seed = Data("seed", RNDSeed());
+    FlkrrRND.state = Data("state", 0);
+    FlkrrRND.SessionRNG = Math.seed(seed);
     FlickrImageApi("1", "event");
 }
 
 function GetImage() {
-    state = parseInt(state) + 1; // add one to state
-    store.setItem(subject + "#state", state); // save state
+    var state = parseInt(FlkrrRND.state) + 1; // add one to state
+    FlkrrRND.store.setItem(subject + "#state", state); // save state
     FlickrImageApi(order[state]); // Get
 }
 
 function CreateURL(page) { // Template
-    return "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=" + flkrkey + "+&format=json&per_page=1&extras=owner_name,url_o&page=" + page + "&text=" + subject + "&jsoncallback=event&license=" + flkrlicense;
+    return "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=" + FlkrrRND.apikey + "+&format=json&per_page=1&extras=owner_name,url_o&page=" + page + "&text=" + FlkrrRND.subject + "&jsoncallback=event&license=" + FlkrrRND.license;
 }
 
 Math.seed = function(s) { // Magic seed function I did not make
-    seed = s;
+    FlkrrRND.seed = s;
     var mask = 0xffffffff;
     var m_w = (123456789 + s) & mask;
     var m_z = (987654321 - s) & mask;
@@ -52,8 +52,8 @@ Math.seed = function(s) { // Magic seed function I did not make
 }
 
 function FlickrImageApi(page) { // Run JSONP
-    url = CreateURL(page);
-    s = document.createElement("script");
+    var url = CreateURL(page);
+    var s = document.createElement("script");
     s.src = url;
     document.body.appendChild(s);
     s.remove();
@@ -78,7 +78,7 @@ function event(data) { // Main callback from flickr (returns true if event)
         if (state > pages) {
             state = 0; // If state is invalid reset to 0
         }
-        order = RandomOrder(pages); // Put requests in an random order
+        var order = RandomOrder(pages); // Put requests in an random order
         setInterval(GetImage, update_rate);
         if (state > 0) {
             return false // Dont send event
