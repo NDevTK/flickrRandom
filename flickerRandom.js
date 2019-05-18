@@ -17,7 +17,7 @@ function RNDSeed() { // Creates seed
 function InitFlickerRandom(subject = "", apikey, license = 10) { // Start Function
     FlkrrRND.apikey = apikey
     FlkrrRND.license = license;
-    FlkrrRND.subject = subject = encodeURI(subject);
+    FlkrrRND.subject = encodeURI(subject);
     FlkrrRND.store = window.localStorage;
     FlkrrRND.seed = Data("seed", RNDSeed());
     FlkrrRND.state = Data("state", 0);
@@ -27,7 +27,7 @@ function InitFlickerRandom(subject = "", apikey, license = 10) { // Start Functi
 
 function GetImage() {
     var state = parseInt(FlkrrRND.state) + 1; // add one to state
-    FlkrrRND.store.setItem(subject + "#state", state); // save state
+    FlkrrRND.store.setItem(FlkrrRND.subject + "#state", state); // save state
     FlickrImageApi(order[state]); // Get
 }
 
