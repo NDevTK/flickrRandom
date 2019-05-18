@@ -98,6 +98,6 @@ function event(data) { // Main callback from flickr (returns true if event)
         setInterval(GetImage, update_rate);
         if (FlickrRND.state > 0) return false // Dont send event
     }
-	FlickrRND.queue = detail: {url: data.photos.photo[0].url_o,credit: data.photos.photo[0].owner}
+	FlickrRND.queue = {detail: {url: data.photos.photo[0].url_o,credit: data.photos.photo[0].owner}}
     return true
 }
