@@ -1,4 +1,3 @@
-update_rate = 1000; // Get new images every second :D
 FlickrRND = {}
 function Data(name, altdata) { // If local storage does not have the key return with altdata
     var item = FlickrRND.subject + "#" + name; // eg "cats#seed"
@@ -14,7 +13,7 @@ function RNDSeed() { // Creates seed
     return Math.floor(Math.random() * 20)
 }
 
-function InitFlickrRandom(subject = "", apikey, license = 10) { // Start Function
+function InitFlickrRandom(subject = "", apikey, license = 10, update_rate = 3000) { // Start Function
     FlickrRND.apikey = apikey;
     FlickrRND.license = license;
     FlickrRND.subject = encodeURI(subject);
