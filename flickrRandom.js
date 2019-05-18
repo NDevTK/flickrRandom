@@ -9,16 +9,12 @@ function Data(name, altdata) { // If local storage does not have the key return 
     }
 }
 
-function RNDSeed() { // Creates seed
-    return Math.floor(Math.random() * 20)
-}
-
 function InitFlickrRandom(subject = "", apikey, license = 10, update_rate = 3000) { // Start Function
     FlickrRND.apikey = apikey;
     FlickrRND.license = license;
     FlickrRND.subject = encodeURI(subject);
     FlickrRND.store = window.localStorage;
-    FlickrRND.seed = Data("seed", RNDSeed());
+    FlickrRND.seed = Data("seed", Math.random());
     FlickrRND.state = Data("state", 0);
     FlickrRND.SessionRNG = Math.seed(FlickrRND.seed);
     FlickrImageApi("1", "event");
