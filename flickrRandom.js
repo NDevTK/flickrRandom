@@ -26,9 +26,9 @@ function InitFlickrRandom(subject = "", apikey, license = 10) { // Start Functio
 }
 
 function GetImage() {
-    var state = parseInt(FlickrRND.state) + 1; // add one to state
+    FlickrRND.state = parseInt(FlickrRND.state) + 1; // add one to state
     FlickrRND.store.setItem(FlickrRND.subject + "#state", state); // save state
-    FlickrImageApi(order[state]); // Get
+    FlickrImageApi(FlickrRND.order[FlickrRND.state]); // Get
 }
 
 function CreateURL(page) { // Template
@@ -83,7 +83,7 @@ function event(data) { // Main callback from flickr (returns true if event)
         if (FlickrRND.state > FlickrRND.pages) {
             FlickrRND.state = 0; // If state is invalid reset to 0
         }
-        var order = RandomOrder(FlickrRND.pages); // Put requests in an random order
+        FlickrRND.order = RandomOrder(FlickrRND.pages); // Put requests in an random order
         setInterval(GetImage, update_rate);
         if (FlickrRND.state > 0) {
             return false // Dont send event
