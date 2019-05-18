@@ -14,7 +14,7 @@ function RNDSeed() { // Creates seed
     return Math.floor(Math.random() * 20)
 }
 
-function InitFlickerRandom(subject, apikey, license = 10) { // Start Function
+function InitFlickerRandom(subject = "", apikey, license = 10) { // Start Function
     FlkrrRND.apikey = apikey
     FlkrrRND.license = license;
     FlkrrRND.subject = subject = encodeURI(subject);
