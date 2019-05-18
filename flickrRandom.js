@@ -92,7 +92,7 @@ function event(data) { // Main callback from flickr (returns true if event)
 		FlickrRND.state = 0; // If state is invalid reset to 0
     }
     if (data.photos.page === 1) { // On first page start loop
-        FlickrRND.FlickrRND.skip = data.photos.photo[0].id;
+        FlickrRND.skip = data.photos.photo[0].id;
         FlickrRND.order = RandomOrder(FlickrRND.pages); // Put requests in an random order
 		GetImage();
         setInterval(GetImage, update_rate);
