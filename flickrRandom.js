@@ -1,4 +1,7 @@
 FlickrRND = {}
+FlickrRND.skip = ":D";
+FlickrRND.queue = {};
+
 function Data(name, altdata) { // If local storage does not have the key return with altdata
     var item = FlickrRND.subject + "#" + name; // eg "cats#seed"
     if (data = FlickrRND.store.getItem(item)) {
@@ -18,6 +21,12 @@ function InitFlickrRandom(subject = "", apikey, license = 10, update_rate = 3000
     FlickrRND.state = Data("state", 0);
     FlickrRND.SessionRNG = Math.seed(FlickrRND.seed);
     FlickrImageApi("1", "event");
+}
+
+function SendEvent(){
+	var event1 = new CustomEvent("onFlickrImage", FlickrRND.queue);
+    window.dispatchEvent(event1);
+	GetImage();
 }
 
 function GetImage() {
@@ -69,30 +78,26 @@ function RandomOrder(pages) {
 }
 
 function event(data) { // Main callback from flickr (returns true if event)
+    if(FlickrRND.skip == data.photos.photo[0].id){
+		GetImage();
+		return false;
+	}
     if(data.stat == "fail" && data.message){
 		var error = "FlickrAPI: "+data.message;
 		alert(error);
 		console.log(error);
 	}
     FlickrRND.pages = data.photos.pages; // Get total pages
-    if (FlickrRND.state > FlickrRND.pages) {
-            FlickrRND.state = 0; // If state is invalid reset to 0
+	if (FlickrRND.state > FlickrRND.pages) {
+		FlickrRND.state = 0; // If state is invalid reset to 0
     }
     if (data.photos.page === 1) { // On first page start loop
-        
+        FlickrRND.FlickrRND.skip = data.photos.photo[0].id;
         FlickrRND.order = RandomOrder(FlickrRND.pages); // Put requests in an random order
+		GetImage();
         setInterval(GetImage, update_rate);
-        if (FlickrRND.state > 0) {
-            return false // Dont send event
-        }
+        if (FlickrRND.state > 0) return false // Dont send event
     }
-
-    var event1 = new CustomEvent("onFlickrImage", {
-        detail: {
-            url: data.photos.photo[0].url_o,
-            credit: data.photos.photo[0].owner
-        }
-    });
-    window.dispatchEvent(event1);
+	FlickrRND.queue = detail: {url: data.photos.photo[0].url_o,credit: data.photos.photo[0].owner}
     return true
 }
