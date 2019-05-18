@@ -75,10 +75,11 @@ function event(data) { // Main callback from flickr (returns true if event)
 		console.log(error);
 	}
     FlickrRND.pages = data.photos.pages; // Get total pages
-    if (data.photos.page === 1) { // On first page start loop
-        if (FlickrRND.state > FlickrRND.pages) {
+    if (FlickrRND.state > FlickrRND.pages) {
             FlickrRND.state = 0; // If state is invalid reset to 0
-        }
+    }
+    if (data.photos.page === 1) { // On first page start loop
+        
         FlickrRND.order = RandomOrder(FlickrRND.pages); // Put requests in an random order
         setInterval(GetImage, update_rate);
         if (FlickrRND.state > 0) {
