@@ -1,6 +1,7 @@
 FlickrRND = {}
 FlickrRND.skip = ":D";
-FlickrRND.queue = {};
+FlickrRND.queue = [];
+FlickrRND.bufferAmount = 3;
 
 function Data(name, altdata) { // If local storage does not have the key return with altdata
     var item = FlickrRND.subject + "#" + name; // eg "cats#seed"
@@ -55,6 +56,14 @@ Math.seed = function(s) { // Magic seed function I did not make
     }
 }
 
+function SendEvent(){
+	if(FlickrRND.queue.length > 1) FlickrRND.queue.shift();
+	if(FlickrRND.queue.length == 0) return;
+	var event1 = new CustomEvent("onFlickrImage", FlickrRND.queue[0]);
+	window.dispatchEvent(event1);
+	GetImage();
+}
+
 function FlickrImageApi(page) { // Run JSONP
     var url = CreateURL(page);
     var s = document.createElement("script");
@@ -78,6 +87,7 @@ function RandomOrder(pages) {
 }
 
 function event(data) { // Main callback from flickr (returns true if event)
+    if(FlickrRND.bufferAmount == FlickrRND.queue.length) return false;
     if(FlickrRND.skip == data.photos.photo[0].id){
 		GetImage();
 		return false;
@@ -94,10 +104,12 @@ function event(data) { // Main callback from flickr (returns true if event)
     if (data.photos.page === 1) { // On first page start loop
         FlickrRND.skip = data.photos.photo[0].id;
         FlickrRND.order = RandomOrder(FlickrRND.pages); // Put requests in an random order
-	GetImage();
-        setInterval(SendEvent, update_rate);
+		GetImage();
+        setInterval(SendEvent, FlickrRND.update_rate);
         if (FlickrRND.state > 0) return false // Dont send event
     }
-	FlickrRND.queue = {detail: {url: data.photos.photo[0].url_o,credit: data.photos.photo[0].owner}}
+	FlickrRND.queue.push({detail: {url: data.photos.photo[0].url_o,credit: data.photos.photo[0].owner}});
+	if(FlickrRND.bufferAmount < FlickrRND.queue.length) GetImage();
     return true
+}n true
 }
