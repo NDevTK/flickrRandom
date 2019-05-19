@@ -25,15 +25,21 @@ function InitFlickrRandom(subject = "", apikey, license = 10, update_rate = 3000
     FlickrImageApi("1", "event");
 }
 
-function SendEvent() {
-    if (FlickrRND.queue.length == 0) {
-        GetImage();
-        return false;
+function SendEvent(){
+	if(FlickrRND.queue.length == 0) {
+		GetImage();
+		return false;
+	}
+	var evurls = [];
+	var evcredits = [];
+    for (i = 0; i < per_event; i++) {
+		evurls.push(FlickrRND.queue[i].detail.url)
+		evcredits.push(FlickrRND.queue[i].detail.credit)
+		FlickrRND.queue.shift();
     }
-    var event1 = new CustomEvent("onFlickrImage", FlickrRND.queue[0]);
+	var event1 = new CustomEvent("onFlickrImage", {detail: {urls: evurls,credits: evcredits}});
     window.dispatchEvent(event1);
-    if (FlickrRND.queue.length > 1) FlickrRND.queue.shift();
-    GetImage();
+	GetImage();
 }
 
 function GetImage() {
