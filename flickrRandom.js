@@ -139,5 +139,3 @@ function event(data) { // Main callback from flickr (returns true if event)
     GetImage();
     return true
 }
-n true
-}
