@@ -2,6 +2,7 @@ FlickrRND = {}
 FlickrRND.skip = ":D";
 FlickrRND.queue = [];
 FlickrRND.bufferAmount = 3;
+FlickrRND.per_event = 2;
 
 function Data(name, altdata) { // If local storage does not have the key return with altdata
     var item = FlickrRND.subject + "#" + name; // eg "cats#seed"
@@ -24,15 +25,15 @@ function InitFlickrRandom(subject = "", apikey, license = 10, update_rate = 3000
     FlickrImageApi("1", "event");
 }
 
-function SendEvent(){
-	if(FlickrRND.queue.length == 0) {
-		GetImage();
-		return false;
-	}
-	var event1 = new CustomEvent("onFlickrImage", FlickrRND.queue[0]);
-	window.dispatchEvent(event1);
-	if(FlickrRND.queue.length > 1) FlickrRND.queue.shift();
-	GetImage();
+function SendEvent() {
+    if (FlickrRND.queue.length == 0) {
+        GetImage();
+        return false;
+    }
+    var event1 = new CustomEvent("onFlickrImage", FlickrRND.queue[0]);
+    window.dispatchEvent(event1);
+    if (FlickrRND.queue.length > 1) FlickrRND.queue.shift();
+    GetImage();
 }
 
 function GetImage() {
@@ -61,12 +62,26 @@ Math.seed = function(s) { // Magic seed function I did not make
     }
 }
 
-function SendEvent(){
-	if(FlickrRND.queue.length > 1) FlickrRND.queue.shift();
-	if(FlickrRND.queue.length == 0) return;
-	var event1 = new CustomEvent("onFlickrImage", FlickrRND.queue[0]);
-	window.dispatchEvent(event1);
-	GetImage();
+function SendEvent() {
+    if (FlickrRND.queue.length == 0) {
+        GetImage();
+        return false;
+    }
+    var evurls = [];
+    var evcredits = [];
+    for (i = 0; i < FlickrRND.per_event; i++) {
+        evurls.push(FlickrRND.queue[i].detail.url)
+        evcredits.push(FlickrRND.queue[i].detail.credit)
+        FlickrRND.queue.shift();
+    }
+    var event1 = new CustomEvent("onFlickrImage", {
+        detail: {
+            urls: evurls,
+            credits: evcredits
+        }
+    });
+    window.dispatchEvent(event1);
+    GetImage();
 }
 
 function FlickrImageApi(page) { // Run JSONP
@@ -86,37 +101,43 @@ function shuffle(a) { // Shuffle array using seed
 }
 
 function RandomOrder(pages) {
-    if(pages > 10000) pages = 10000; // API limit (I think)
+    if (pages > 10000) pages = 10000; // API limit (I think)
     var numbers = [...Array(pages)].map((_, i) => i + 1);
     return shuffle(numbers);
 }
 
 function event(data) { // Main callback from flickr (returns true if event)
-    if(FlickrRND.bufferAmount == FlickrRND.queue.length) return false;
-    if(FlickrRND.skip == data.photos.photo[0].id){
-		GetImage();
-		return false;
-	}
-    if(data.stat == "fail" && data.message){
-		var error = "FlickrAPI: "+data.message;
-		alert(error);
-		console.log(error);
-	}
+    if (FlickrRND.bufferAmount == FlickrRND.queue.length) return false;
+    if (FlickrRND.skip == data.photos.photo[0].id) {
+        GetImage();
+        return false;
+    }
+    if (data.stat == "fail" && data.message) {
+        var error = "FlickrAPI: " + data.message;
+        alert(error);
+        console.log(error);
+    }
     FlickrRND.pages = data.photos.pages; // Get total pages
-	if (FlickrRND.state > FlickrRND.pages) {
-		FlickrRND.state = 0; // If state is invalid reset to 0
+    if (FlickrRND.state > FlickrRND.pages) {
+        FlickrRND.state = 0; // If state is invalid reset to 0
     }
     if (data.photos.page === 1) { // On first page start loop
         FlickrRND.skip = data.photos.photo[0].id;
         FlickrRND.order = RandomOrder(FlickrRND.pages); // Put requests in an random order
-		GetImage();
+        GetImage();
         setInterval(SendEvent, FlickrRND.update_rate);
         if (FlickrRND.state > 0) return false // Dont send event
     }
-	if(data.photos.photo[0].url_o && data.photos.photo[0].owner){
-	FlickrRND.queue.push({detail: {url: data.photos.photo[0].url_o,credit: data.photos.photo[0].owner}});
-	}
-	GetImage();
+    if (data.photos.photo[0].url_o && data.photos.photo[0].owner) {
+        FlickrRND.queue.push({
+            detail: {
+                url: data.photos.photo[0].url_o,
+                credit: data.photos.photo[0].owner
+            }
+        });
+    }
+    GetImage();
     return true
-}n true
+}
+n true
 }
