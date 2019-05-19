@@ -107,6 +107,10 @@ function event(data) { // Main callback from flickr (returns true if event)
         alert(error);
         console.log(error);
     }
+    if (!data.photos.photo[0].url_o){
+        GetImage();
+        return false;
+    }
     FlickrRND.pages = data.photos.pages; // Get total pages
     if (FlickrRND.state > FlickrRND.pages) {
         FlickrRND.state = 0; // If state is invalid reset to 0
