@@ -8,8 +8,8 @@ Use license to filter the images look up the number. https://www.flickr.com/serv
   
 Then you can create the event Listener for onFlickrImage  
 window.addEventListener("onFlickrImage", function(event){  
-alert([event.detail.url]);  
+alert(event.detail.urls[0]);  
 });  
   
   
-Events have both detail.url and detail.credit
+Events have both detail.urls and detail.credits
