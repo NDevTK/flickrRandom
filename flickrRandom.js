@@ -25,23 +25,6 @@ function InitFlickrRandom(subject = "", apikey, license = 10, update_rate = 3000
     FlickrImageApi("1", "event");
 }
 
-function SendEvent(){
-	if(FlickrRND.queue.length == 0) {
-		GetImage();
-		return false;
-	}
-	var evurls = [];
-	var evcredits = [];
-    for (i = 0; i < per_event; i++) {
-		evurls.push(FlickrRND.queue[i].detail.url)
-		evcredits.push(FlickrRND.queue[i].detail.credit)
-		FlickrRND.queue.shift();
-    }
-	var event1 = new CustomEvent("onFlickrImage", {detail: {urls: evurls,credits: evcredits}});
-    window.dispatchEvent(event1);
-	GetImage();
-}
-
 function GetImage() {
     FlickrRND.state = parseInt(FlickrRND.state) + 1; // add one to state
     FlickrRND.store.setItem(FlickrRND.subject + "#state", state); // save state
