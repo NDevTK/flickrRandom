@@ -109,7 +109,7 @@ function event(data) { // Main callback from flickr (returns true if event)
         if (FlickrRND.state > 0) return false // Dont send event
     }
 	FlickrRND.queue.push({detail: {url: data.photos.photo[0].url_o,credit: data.photos.photo[0].owner}});
-	if(FlickrRND.bufferAmount < FlickrRND.queue.length) GetImage();
+	GetImage();
     return true
 }n true
 }
