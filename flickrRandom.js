@@ -1,5 +1,4 @@
 FlickrRND = {}
-FlickrRND.skip = ":D";
 FlickrRND.fail_count = 0;
 FlickrRND.queue = [];
 FlickrRND.bufferAmount = 2;
