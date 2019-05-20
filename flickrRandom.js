@@ -98,7 +98,7 @@ function RandomOrder(pages) {
 
 function event(data) { // Main callback from flickr (returns true if event)
     if (FlickrRND.bufferAmount == FlickrRND.queue.length) return false;
-    if (data.photos.photo[0].id && FlickrRND.skip == data.photos.photo[0].id) {
+    if (FlickrRND.skip && FlickrRND.skip == data.photos.photo[0].id) {
         GetImage();
         return false;
     }
