@@ -60,8 +60,8 @@ function SendEvent() {
     var evcredits = [];
     for (i = 0; i < FlickrRND.per_event; i++) {
         if(i > FlickrRND.queue.length -1) return false;
-        evurls.push(FlickrRND.queue[i].detail.url)
-        evcredits.push(FlickrRND.queue[i].detail.credit)
+        evurls.push(FlickrRND.queue[i].url)
+        evcredits.push(FlickrRND.queue[i].credit)
         FlickrRND.queue.shift();
     }
     var event1 = new CustomEvent("onFlickrImage", {
