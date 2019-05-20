@@ -1,5 +1,6 @@
 FlickrRND = {}
 FlickrRND.skip = ":D";
+FlickrRND.fail_count = 0;
 FlickrRND.queue = [];
 FlickrRND.bufferAmount = 2;
 FlickrRND.per_event = 2;
@@ -75,7 +76,7 @@ function SendEvent() {
 }
 
 function FlickrImageApi(page) { // Run JSONP
-    if(failcount >= 5) return; // Failsafe
+    if(FlickrRND.fail_count >= 5) return; // Failsafe
     var url = CreateURL(page);
     var s = document.createElement("script");
     s.src = url;
@@ -101,17 +102,17 @@ function event(data) { // Main callback from flickr (returns true if event)
     photo = data.photos.photo[0];
     if(!photo) {
         GetImage();
-        failcount += 1;
+        FlickrRND.fail_count += 1;
         return false;
     }
 
     if (FlickrRND.hasOwnProperty("skip") && FlickrRND.skip == photo.hasOwnProperty("id")) {
         GetImage();
-        failcount += 1;
+        FlickrRND.fail_count += 1;
         return false;
     }
     if (data.stat == "fail" && data.message) {
-        failcount += 4;
+        FlickrRND.fail_count += 4;
         var error = "FlickrAPI: " + data.message;
         alert(error);
         console.log(error);
@@ -132,9 +133,9 @@ function event(data) { // Main callback from flickr (returns true if event)
             url: data.photos.photo[0].url_o,
             credit: data.photos.photo[0].owner
         });
-        failcount = 0;
+        FlickrRND.fail_count = 0;
     }else{
-    failcount += 1;
+    FlickrRND.fail_count += 1;
     }
     if (FlickrRND.bufferAmount < FlickrRND.queue.length) GetImage();
     return true
