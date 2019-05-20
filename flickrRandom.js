@@ -123,7 +123,7 @@ function event(data) { // Main callback from flickr (returns true if event)
         setInterval(SendEvent, FlickrRND.update_rate);
         if (FlickrRND.state > 0) return false // Dont send event
     }
-    if (photo.hasOwnProperty("url_o") && photo.hasOwnProperty(owner)) {
+    if (photo.hasOwnProperty("url_o") && photo.hasOwnProperty("owner")) {
         FlickrRND.queue.push({
             url: data.photos.photo[0].url_o,
             credit: data.photos.photo[0].owner
