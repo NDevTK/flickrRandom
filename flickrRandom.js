@@ -59,7 +59,7 @@ function SendEvent() {
     var evurls = [];
     var evcredits = [];
     for (i = 0; i < FlickrRND.per_event; i++) {
-        if(i >= FlickrRND.queue.length) return false;
+        if(i > FlickrRND.queue.length -1) return false;
         evurls.push(FlickrRND.queue[i].detail.url)
         evcredits.push(FlickrRND.queue[i].detail.credit)
         FlickrRND.queue.shift();
