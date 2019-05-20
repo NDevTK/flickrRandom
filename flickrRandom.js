@@ -120,10 +120,8 @@ function event(data) { // Main callback from flickr (returns true if event)
     }
     if (data.photos.photo[0].url_o && data.photos.photo[0].owner) {
         FlickrRND.queue.push({
-            detail: {
-                url: data.photos.photo[0].url_o,
-                credit: data.photos.photo[0].owner
-            }
+            url: data.photos.photo[0].url_o,
+            credit: data.photos.photo[0].owner
         });
     }
     GetImage();
