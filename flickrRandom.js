@@ -111,6 +111,7 @@ function event(data) { // Main callback from flickr (returns true if event)
         return false;
     }
     if (data.stat == "fail" && data.message) {
+        failcount += 4;
         var error = "FlickrAPI: " + data.message;
         alert(error);
         console.log(error);
