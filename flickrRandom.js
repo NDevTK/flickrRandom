@@ -97,8 +97,13 @@ function RandomOrder(pages) {
 }
 
 function event(data) { // Main callback from flickr (returns true if event)
+    photo = data.photos.photo[0];
+    if(!photo) {
+        GetImage();
+        return false;
+    }
     if (FlickrRND.bufferAmount == FlickrRND.queue.length) return false;
-    if (FlickrRND.skip && FlickrRND.skip == data.photos.photo[0].id) {
+    if (FlickrRND.hasOwnProperty("skip") && FlickrRND.skip == photo.hasOwnProperty("id")) {
         GetImage();
         return false;
     }
@@ -118,7 +123,7 @@ function event(data) { // Main callback from flickr (returns true if event)
         setInterval(SendEvent, FlickrRND.update_rate);
         if (FlickrRND.state > 0) return false // Dont send event
     }
-    if (data.photos.photo[0].url_o && data.photos.photo[0].owner) {
+    if (photo.hasOwnProperty("url_o") && photo.hasOwnProperty(owner)) {
         FlickrRND.queue.push({
             url: data.photos.photo[0].url_o,
             credit: data.photos.photo[0].owner
