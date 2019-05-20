@@ -75,6 +75,7 @@ function SendEvent() {
 }
 
 function FlickrImageApi(page) { // Run JSONP
+    if(failcount >= 5) return; // Failsafe
     var url = CreateURL(page);
     var s = document.createElement("script");
     s.src = url;
@@ -100,11 +101,13 @@ function event(data) { // Main callback from flickr (returns true if event)
     photo = data.photos.photo[0];
     if(!photo) {
         GetImage();
+        failcount += 1;
         return false;
     }
-    if (FlickrRND.bufferAmount == FlickrRND.queue.length) return false;
+
     if (FlickrRND.hasOwnProperty("skip") && FlickrRND.skip == photo.hasOwnProperty("id")) {
         GetImage();
+        failcount += 1;
         return false;
     }
     if (data.stat == "fail" && data.message) {
@@ -128,7 +131,10 @@ function event(data) { // Main callback from flickr (returns true if event)
             url: data.photos.photo[0].url_o,
             credit: data.photos.photo[0].owner
         });
+        failcount = 0;
+    }else{
+    failcount += 1;
     }
-    GetImage();
+    if (FlickrRND.bufferAmount < FlickrRND.queue.length) GetImage();
     return true
 }
