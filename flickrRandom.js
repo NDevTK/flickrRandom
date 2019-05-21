@@ -71,7 +71,6 @@ function SendEvent() {
         }
     });
     window.dispatchEvent(event1);
-    GetImage();
 }
 
 function FlickrImageApi(page) { // Run JSONP
