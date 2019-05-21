@@ -70,6 +70,7 @@ function SendEvent() {
         }
     });
     window.dispatchEvent(event1); // Send Event :D
+    GetImage();
 }
 
 function FlickrImageApi(page) { // Run JSONP
