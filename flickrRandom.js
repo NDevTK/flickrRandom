@@ -26,6 +26,7 @@ function InitFlickrRandom(subject = "", apikey = "none", license = 10, update_ra
 }
 
 function GetImage() {
+    if (FlickrRND.bufferAmount >= FlickrRND.queue.length) return;
     FlickrRND.state = parseInt(FlickrRND.state) + 1; // add one to state
     FlickrRND.store.setItem(FlickrRND.subject + "#state", FlickrRND.state); // save state
     FlickrImageApi(FlickrRND.order[FlickrRND.state]); // Get
