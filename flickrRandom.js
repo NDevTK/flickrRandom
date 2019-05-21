@@ -16,6 +16,7 @@ function Data(name, altdata) { // If local storage does not have the key return 
 
 function InitFlickrRandom(subject = "", apikey = "none", license = 10, update_rate = 3000) { // Start Function
     FlickrRND.apikey = apikey;
+    FlickrRND.update_rate = update_rate;
     FlickrRND.license = license;
     FlickrRND.subject = encodeURI(subject);
     FlickrRND.store = window.localStorage;
