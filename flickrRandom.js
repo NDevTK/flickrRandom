@@ -26,7 +26,7 @@ function InitFlickrRandom(subject = "", apikey = "none", license = 10, update_ra
 }
 
 function GetImage() {
-    if (FlickrRND.bufferAmount <= FlickrRND.queue.length) return;
+    if (FlickrRND.bufferAmount > FlickrRND.queue.length) return;
     FlickrRND.state = parseInt(FlickrRND.state) + 1; // add one to state
     FlickrRND.store.setItem(FlickrRND.subject + "#state", FlickrRND.state); // save state
     FlickrImageApi(FlickrRND.order[FlickrRND.state]); // Get
@@ -98,7 +98,7 @@ function RandomOrder(pages) {
 }
 
 function event(data) { // Main callback from flickr (returns true if event)
-    photo = data.photos.photo[0];
+    var photo = data.photos.photo[0];
     if(!photo) {
         GetImage();
         FlickrRND.fail_count += 1;
