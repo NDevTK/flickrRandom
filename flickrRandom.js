@@ -105,7 +105,7 @@ function event(data) { // Main callback from flickr (returns true if event)
         return false;
     }
 
-    if (FlickrRND.hasOwnProperty("skip") && FlickrRND.skip == photo.hasOwnProperty("id")) {
+    if (FlickrRND.hasOwnProperty("skip") && FlickrRND.skip == photo.id) {
         GetImage();
         FlickrRND.fail_count += 1;
         return false;
@@ -121,7 +121,7 @@ function event(data) { // Main callback from flickr (returns true if event)
         FlickrRND.state = 0; // If state is invalid reset to 0
     }
     if (data.photos.page === 1) { // On first page start loop
-        FlickrRND.skip = data.photos.photo[0].id;
+        FlickrRND.skip = photo.id;
         FlickrRND.order = RandomOrder(FlickrRND.pages); // Put requests in an random order
         GetImage();
         setInterval(SendEvent, FlickrRND.update_rate);
@@ -129,13 +129,13 @@ function event(data) { // Main callback from flickr (returns true if event)
     }
     if (photo.hasOwnProperty("url_o") && photo.hasOwnProperty("owner")) {
         FlickrRND.queue.push({
-            url: data.photos.photo[0].url_o,
-            credit: data.photos.photo[0].owner
+            url: photo.url_o,
+            credit: photo.owner
         });
         FlickrRND.fail_count = 0;
     }else{
     FlickrRND.fail_count += 1;
     }
-    if (FlickrRND.bufferAmount < FlickrRND.queue.length) GetImage();
+    GetImage();
     return true
 }
