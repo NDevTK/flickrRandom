@@ -1,8 +1,8 @@
 FlickrRND = {}
 FlickrRND.fail_count = 0;
 FlickrRND.queue = [];
-FlickrRND.bufferAmount = 2;
-FlickrRND.per_event = 2;
+FlickrRND.bufferAmount = 5;
+FlickrRND.per_event = 4;
 
 function Data(name, altdata) { // If local storage does not have the key return with altdata
     var item = FlickrRND.subject + "#" + name; // eg "cats#seed"
