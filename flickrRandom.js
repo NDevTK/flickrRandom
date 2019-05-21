@@ -1,8 +1,8 @@
 FlickrRND = {}
 FlickrRND.fail_count = 0;
 FlickrRND.queue = [];
-FlickrRND.bufferAmount = 5;
-FlickrRND.per_event = 4;
+FlickrRND.bufferAmount = 2;
+FlickrRND.per_event = 2;
 
 function Data(name, altdata) { // If local storage does not have the key return with altdata
     var item = FlickrRND.subject + "#" + name; // eg "cats#seed"
@@ -61,7 +61,7 @@ function SendEvent() {
     var evurls = [];
     var evcredits = [];
     for (i = 0; i < FlickrRND.per_event; i++) {
-        if(i > FlickrRND.queue.length -1) return false;
+        if(i > FlickrRND.queue.length -1) break;
         evurls.push(FlickrRND.queue[i].url)
         evcredits.push(FlickrRND.queue[i].credit)
         FlickrRND.queue.shift();
