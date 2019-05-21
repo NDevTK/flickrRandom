@@ -1,5 +1,5 @@
 FlickrRND = {} // Main object
-FlickrRND.fail_count = 0; // Failsafe if gets to 5 requests will stop
+FlickrRND.fail_count = 0; // Failsafe if gets to 5 requests will stop being sent
 FlickrRND.queue = [];
 FlickrRND.bufferAmount = 2; // URLS to get from API per update_rate
 FlickrRND.per_event = 2; // How many results from the event
@@ -23,17 +23,17 @@ function InitFlickrRandom(subject = "", apikey = "none", license = 10, update_ra
     FlickrRND.seed = Data("seed", Math.random());
     FlickrRND.state = Data("state", 0);
     FlickrRND.SessionRNG = Math.seed(FlickrRND.seed);
-    FlickrImageApi("1", "event");
+    FlickrImageApi("1", "event"); // Get first page (if state is > 1 it will just be to get the page count)
 }
 
-function GetImage() {
+function GetImage() { // Get new image URL and callback to event
     if (FlickrRND.bufferAmount == FlickrRND.queue.length) return;
     FlickrRND.state = parseInt(FlickrRND.state) + 1; // add one to state
     FlickrRND.store.setItem(FlickrRND.subject + "#state", FlickrRND.state); // save state
     FlickrImageApi(FlickrRND.order[FlickrRND.state]); // Get
 }
 
-function CreateURL(page) { // Template (may want to override with your own API as to not shere you API key)
+function CreateURL(page) { // Template (may want to override this with your own API as to not shere your flickr API key)
     return "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=" + FlickrRND.apikey + "+&format=json&per_page=1&extras=owner_name,url_o&sort=relevance&page=" + page + "&text=" + FlickrRND.subject + "&jsoncallback=event&license=" + FlickrRND.license;
 }
 
