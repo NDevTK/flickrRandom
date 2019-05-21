@@ -1,8 +1,8 @@
-FlickrRND = {}
-FlickrRND.fail_count = 0;
+FlickrRND = {} // Main object
+FlickrRND.fail_count = 0; // Failsafe if gets to 5 requests will stop
 FlickrRND.queue = [];
-FlickrRND.bufferAmount = 2;
-FlickrRND.per_event = 2;
+FlickrRND.bufferAmount = 2; // URLS to get from API per update_rate
+FlickrRND.per_event = 2; // How many results from the event
 
 function Data(name, altdata) { // If local storage does not have the key return with altdata
     var item = FlickrRND.subject + "#" + name; // eg "cats#seed"
@@ -33,8 +33,8 @@ function GetImage() {
     FlickrImageApi(FlickrRND.order[FlickrRND.state]); // Get
 }
 
-function CreateURL(page) { // Template
-    return "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=" + FlickrRND.apikey + "+&format=json&per_page=1&extras=owner_name,url_o&page=" + page + "&text=" + FlickrRND.subject + "&jsoncallback=event&license=" + FlickrRND.license;
+function CreateURL(page) { // Template (may want to override with your own API as to not shere you API key)
+    return "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=" + FlickrRND.apikey + "+&format=json&per_page=1&extras=owner_name,url_o&sort=relevance&page=" + page + "&text=" + FlickrRND.subject + "&jsoncallback=event&license=" + FlickrRND.license;
 }
 
 Math.seed = function(s) { // Magic seed function I did not make
@@ -54,17 +54,14 @@ Math.seed = function(s) { // Magic seed function I did not make
 }
 
 function SendEvent() {
-    if (FlickrRND.queue.length == 0) {
-        GetImage();
-        return false;
-    }
-    var evurls = [];
-    var evcredits = [];
+    if (FlickrRND.queue.length == 0) return false; // If nothing in queue return
+    var evurls = []; // Temp place to store URLs
+    var evcredits = []; // Temp place to store Credits
     for (i = 0; i < FlickrRND.per_event; i++) {
         if(i > FlickrRND.queue.length -1) break;
         evurls.push(FlickrRND.queue[i].url)
         evcredits.push(FlickrRND.queue[i].credit)
-        FlickrRND.queue.shift();
+        FlickrRND.queue.shift(); // Remove item added to event from queue
     }
     var event1 = new CustomEvent("onFlickrImage", {
         detail: {
@@ -72,7 +69,7 @@ function SendEvent() {
             credits: evcredits
         }
     });
-    window.dispatchEvent(event1);
+    window.dispatchEvent(event1); // Send Event :D
 }
 
 function FlickrImageApi(page) { // Run JSONP
@@ -107,7 +104,7 @@ function event(data) { // Main callback from flickr (returns true if event)
         return false;
     }
 
-    if (FlickrRND.hasOwnProperty("skip") && FlickrRND.skip == photo.id) {
+    if (FlickrRND.hasOwnProperty("skip") && FlickrRND.skip == photo.id) { // Check if has seen the same photo.id on page 1
         GetImage();
         FlickrRND.fail_count += 1;
         return false;
@@ -129,7 +126,7 @@ function event(data) { // Main callback from flickr (returns true if event)
         setInterval(SendEvent, FlickrRND.update_rate);
         if (FlickrRND.state > 0) return false // Dont send event
     }
-    if (photo.hasOwnProperty("url_o") && photo.hasOwnProperty("owner")) {
+    if (photo.hasOwnProperty("url_o") && photo.hasOwnProperty("owner")) { // Push to queue
         FlickrRND.queue.push({
             url: photo.url_o,
             credit: photo.owner
@@ -138,6 +135,6 @@ function event(data) { // Main callback from flickr (returns true if event)
     }else{
     FlickrRND.fail_count += 1;
     }
-    GetImage();
+    GetImage(); // New image
     return true
 }
