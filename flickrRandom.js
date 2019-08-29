@@ -3,7 +3,7 @@ FlickrRND.fail_count = 0; // Failsafe if gets to 5 requests will stop being sent
 FlickrRND.queue = [];
 FlickrRND.bufferAmount = 4; // URLS to get from API per update_rate
 FlickrRND.per_event = 4; // How many results from the event
-
+FlickrRND.JSONP = true;
 function Data(name, altdata) { // If local storage does not have the key return with altdata
     var item = FlickrRND.subject + "#" + name; // eg "cats#seed"
     if (data = FlickrRND.store.getItem(item)) {
@@ -73,13 +73,21 @@ function SendEvent() {
     GetImage();
 }
 
+function getJSON(url) {
+return fetch(url).then(response => response.json());
+}
+
 function FlickrImageApi(page) { // Run JSONP
     if(FlickrRND.fail_count >= 5) return; // Failsafe
-    var url = CreateURL(page);
-    var s = document.createElement("script");
-    s.src = url;
-    document.body.appendChild(s);
-    s.remove();
+    let url = CreateURL(page);
+    if(FlickrRND.JSONP) {  
+        let s = document.createElement("script");
+        s.src = url;
+        document.body.appendChild(s);
+        s.remove();
+        return
+    }
+    getJSON(url).then(result => event(result));
 }
 
 function shuffle(a) { // Shuffle array using seed
