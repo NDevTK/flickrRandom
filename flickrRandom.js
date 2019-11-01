@@ -14,15 +14,19 @@ function Data(name, altdata) { // If local storage does not have the key return 
     }
 }
 
+function RNGSeed(seed = Math.random) {
+    FlickrRND.seed = seed;
+    FlickrRND.store.setItem(FlickrRND.subject + "#" + "seed", seed);
+    FlickrRND.SessionRNG = Math.seed(FlickrRND.seed);
+}
+
 function InitFlickrRandom(subject = "", apikey = "none", license = 10, update_rate = 3000) { // Start Function
     FlickrRND.apikey = apikey;
     FlickrRND.update_rate = update_rate;
     FlickrRND.license = license;
     FlickrRND.subject = encodeURI(subject);
     FlickrRND.store = window.localStorage;
-    FlickrRND.seed = Data("seed", Math.random());
     FlickrRND.state = Data("state", 0);
-    FlickrRND.SessionRNG = Math.seed(FlickrRND.seed);
     FlickrImageApi("1", "event"); // Get first page (if state is > 1 it will just be to get the page count)
 }
 
@@ -126,11 +130,9 @@ function event(data) { // Main callback from flickr (returns true if event)
         console.log(error);
     }
     FlickrRND.pages = data.photos.pages; // Get total pages
-    if (FlickrRND.state > FlickrRND.pages) {
-        FlickrRND.state = 0; // If state is invalid reset to 0
-    }
     if (data.photos.page === 1) { // On first page start loop
         FlickrRND.skip = photo.id;
+        RNGSeed();
         FlickrRND.order = RandomOrder(FlickrRND.pages); // Put requests in an random order
         GetImage();
         setInterval(SendEvent, FlickrRND.update_rate);
