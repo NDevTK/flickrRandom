@@ -20,7 +20,7 @@ function RNGSeed(seed = Math.random) {
     FlickrRND.SessionRNG = Math.seed(FlickrRND.seed);
 }
 
-function InitFlickrRandom(subject = "", apikey = "none", license = 10, update_rate = 3000) { // Start Function
+function InitFlickrRandom(subject = "", apikey = "none", license = 10, update_rate = 2000) { // Start Function
     FlickrRND.apikey = apikey;
     FlickrRND.update_rate = update_rate;
     FlickrRND.license = license;
