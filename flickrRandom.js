@@ -1,8 +1,8 @@
 FlickrRND = {} // Main object
 FlickrRND.fail_count = 0; // Failsafe if gets to 5 requests will stop being sent
 FlickrRND.queue = [];
-FlickrRND.bufferAmount = 3; // URLS to get from API per update_rate
-FlickrRND.per_event = 2; // How many results from the event
+FlickrRND.bufferAmount = 4; // URLS to get from API per update_rate
+FlickrRND.per_event = 3; // How many results from the event
 FlickrRND.JSONP = true;
 function Data(name, altdata) { // If local storage does not have the key return with altdata
     var item = FlickrRND.subject + "#" + name; // eg "cats#seed"
