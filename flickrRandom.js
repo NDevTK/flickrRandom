@@ -104,7 +104,7 @@ function shuffle(a) { // Shuffle array using seed
 }
 
 function RandomOrder(pages) {
-    if (pages > 10000) pages = 10000; // API limit (I think)
+    if (pages > 4002) pages = 4002; // API limit (I think)
     var numbers = [...Array(pages)].map((_, i) => i + 1);
     return shuffle(numbers);
 }
