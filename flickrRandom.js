@@ -136,12 +136,14 @@ function event(data) { // Main callback from flickr (returns true if event)
         setInterval(SendEvent, FlickrRND.update_rate);
         if (FlickrRND.state > 0) return false // Dont send event
     }
-    for (photo in data.photos.photo) {
+    for (photo of data.photos.photo) {
         if (photo.hasOwnProperty("url_o") && photo.hasOwnProperty("owner")) { // Push to queue
             FlickrRND.queue.push({
                 url: photo.url_o,
                 credit: photo.owner
             });
+        } else {
+            FlickrRND.fail_count += 1;
         }
     }
     GetImage(); // New image
