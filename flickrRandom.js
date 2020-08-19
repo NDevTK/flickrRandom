@@ -1,7 +1,7 @@
 FlickrRND = {} // Main object
 FlickrRND.fail_count = 0; // Failsafe if gets to 5 requests will stop being sent
 FlickrRND.queue = [];
-FlickrRND.bufferAmount = 4; // URLS to get from API per update_rate
+FlickrRND.bufferAmount = 3; // URLS to get from API per update_rate
 FlickrRND.per_event = 3; // How many results from the event
 FlickrRND.JSONP = true;
 function Data(name, altdata) { // If local storage does not have the key return with altdata
@@ -111,16 +111,14 @@ function RandomOrder(pages) {
 
 function event(data) { // Main callback from flickr (returns true if event)
     if (FlickrRND.bufferAmount == FlickrRND.queue.length) return;
-    var photo = data.photos.photo[0];
-    if(!photo) {
+    var first = data.photos.photo[0];
+    if(!first) {
         GetImage();
         FlickrRND.fail_count += 1;
         return false;
     }
-
-    if (FlickrRND.hasOwnProperty("skip") && FlickrRND.skip == photo.id) { // Check if has seen the same photo.id on page 1
+    if (FlickrRND.hasOwnProperty("skip") && FlickrRND.skip == first.id) { // Check if has seen the same photo.id on page 1
         GetImage();
-        FlickrRND.fail_count += 1;
         return false;
     }
     if (data.stat == "fail" && data.message) {
@@ -138,14 +136,13 @@ function event(data) { // Main callback from flickr (returns true if event)
         setInterval(SendEvent, FlickrRND.update_rate);
         if (FlickrRND.state > 0) return false // Dont send event
     }
-    if (photo.hasOwnProperty("url_o") && photo.hasOwnProperty("owner")) { // Push to queue
-        FlickrRND.queue.push({
-            url: photo.url_o,
-            credit: photo.owner
-        });
-        FlickrRND.fail_count = 0;
-    }else{
-    FlickrRND.fail_count += 1;
+    for (photo in data.photos.photo) {
+        if (photo.hasOwnProperty("url_o") && photo.hasOwnProperty("owner")) { // Push to queue
+            FlickrRND.queue.push({
+                url: photo.url_o,
+                credit: photo.owner
+            });
+        }
     }
     GetImage(); // New image
     return true
