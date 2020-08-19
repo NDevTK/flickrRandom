@@ -129,7 +129,7 @@ function event(data) { // Main callback from flickr (returns true if event)
     }
     FlickrRND.pages = data.photos.pages; // Get total pages
     if (data.photos.page === 1) { // On first page start loop
-        FlickrRND.skip = photo.id;
+        FlickrRND.skip = first.id;
         RNGSeed();
         FlickrRND.order = RandomOrder(FlickrRND.pages); // Put requests in an random order
         GetImage();
