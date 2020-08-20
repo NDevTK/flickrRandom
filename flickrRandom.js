@@ -133,7 +133,7 @@ function event(data) { // Main callback from flickr (returns true if event)
         if (FlickrRND.state > 0) return false // Dont send event
     }
     for (photo of data.photos.photo) {
-        if (FlickrRND.hasOwnProperty("skip") && FlickrRND.skip == first.id) continue // Check if has seen the same photo.id on page 1
+        if (FlickrRND.hasOwnProperty("skip") && FlickrRND.skip == photo.id) continue // Check if has seen the same photo.id on page 1
         if (photo.hasOwnProperty("url_o") && photo.hasOwnProperty("owner")) { // Push to queue
             FlickrRND.queue.push({
                 url: photo.url_o,
