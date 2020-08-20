@@ -117,10 +117,6 @@ function event(data) { // Main callback from flickr (returns true if event)
         FlickrRND.fail_count += 1;
         return false;
     }
-    if (FlickrRND.hasOwnProperty("skip") && FlickrRND.skip == first.id) { // Check if has seen the same photo.id on page 1
-        GetImage();
-        return false;
-    }
     if (data.stat == "fail" && data.message) {
         FlickrRND.fail_count += 4;
         var error = "FlickrAPI: " + data.message;
@@ -137,6 +133,7 @@ function event(data) { // Main callback from flickr (returns true if event)
         if (FlickrRND.state > 0) return false // Dont send event
     }
     for (photo of data.photos.photo) {
+        if (FlickrRND.hasOwnProperty("skip") && FlickrRND.skip == first.id) continue // Check if has seen the same photo.id on page 1
         if (photo.hasOwnProperty("url_o") && photo.hasOwnProperty("owner")) { // Push to queue
             FlickrRND.queue.push({
                 url: photo.url_o,
