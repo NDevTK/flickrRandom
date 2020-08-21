@@ -1,4 +1,4 @@
-# flickrRandom
+# flickrRandom - unmaintained
 # May have bugs,vulnerabilities
 Gets random image URLs from flickr  
 
